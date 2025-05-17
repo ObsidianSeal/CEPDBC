@@ -13,7 +13,7 @@ clientD.once("ready", () => {
 	clientD.user.setActivity({ name: "server.pinniped.page", type: ActivityType.Playing });
 	clientD.channels.cache
 		.get("1349835444740685835")
-		.send(`## <:cepdbc:1373164311127523481> CEPDBC is now online! <:cepdbc:1373164311127523481>\n-# v0.1 @ ${Date.now()} = <t:${Math.round(Date.now() / 1000)}:R>`);
+		.send(`## <:cepdbc:1373164311127523481> CEPDBC is now online! <:cepdbc:1373164311127523481>\n-# v0.2 @ ${Date.now()} = <t:${Math.round(Date.now() / 1000)}:R>`);
 });
 
 // MAKE THE EXAROTON CLIENT
@@ -104,8 +104,16 @@ clientD.on("interactionCreate", async (interaction) => {
 
 // UTILITY: LOG COMMAND USAGE TO CONSOLE
 async function commandLogMessage(interaction, message) {
-	let username = interaction.member.user.username;
-	let displayName = interaction.member.user.displayName;
+	let username, displayName;
+
+	if (interaction.inGuild()) {
+		username = interaction.member.user.username;
+		displayName = interaction.member.user.displayName;
+	} else {
+		username = interaction.user.username;
+		displayName = "\x1b[33m[DM]\x1b[37m";
+	}
+
 	console.log(`\x1b[35m> /${interaction.commandName}\x1b[37m — ${message} | ${displayName} (${username})`);
 }
 
