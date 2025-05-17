@@ -13,7 +13,7 @@ clientD.once("ready", () => {
 	clientD.user.setActivity({ name: "server.pinniped.page", type: ActivityType.Playing });
 	clientD.channels.cache
 		.get("1349835444740685835")
-		.send(`## <:cepdbc:1373164311127523481> CEPDBC is now online! <:cepdbc:1373164311127523481>\n-# v0.0.1 @ ${Date.now()} = <t:${Math.round(Date.now() / 1000)}:R>`);
+		.send(`## <:cepdbc:1373164311127523481> CEPDBC is now online! <:cepdbc:1373164311127523481>\n-# v0.1 @ ${Date.now()} = <t:${Math.round(Date.now() / 1000)}:R>`);
 });
 
 // MAKE THE EXAROTON CLIENT
