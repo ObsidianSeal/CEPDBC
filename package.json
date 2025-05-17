@@ -1,0 +1,24 @@
+{
+  "name": "cepdbc",
+  "version": "0.0.0",
+  "description": "Civil Engineers’ Paradise Discord Bot Companion (CEPDBC)",
+  "homepage": "https://github.com/ObsidianSeal/CEPDBC#readme",
+  "bugs": {
+    "url": "https://github.com/ObsidianSeal/CEPDBC/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ObsidianSeal/CEPDBC.git"
+  },
+  "license": "ISC",
+  "author": "Obsidian_Seal",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "discord.js": "^14.19.3",
+    "exaroton": "^1.11.3"
+  }
+}
