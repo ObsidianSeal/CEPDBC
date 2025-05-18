@@ -2,7 +2,7 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v9");
-const { tokenD, botID } = require("./secrets.json");
+const { tokenD, botID } = require("./config.json");
 
 // MAKE COMMANDS
 const commands = [

@@ -1,7 +1,7 @@
 // *** much of this code is copied from Omega Seal ***
 
 // IMPORT THINGS
-const { tokenD, tokenE } = require("./secrets.json");
+const { tokenD, tokenE } = require("./config.json");
 const { Client: DiscordClient, GatewayIntentBits, ActivityType, InteractionType, MessageFlags, EmbedBuilder, PermissionOverwrites, PermissionsBitField } = require("discord.js");
 const { Client: ExarotonClient } = require("exaroton");
 
