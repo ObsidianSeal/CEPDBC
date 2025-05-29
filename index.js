@@ -10,7 +10,8 @@ const clientE = new ExarotonClient(tokenE);
 
 // THE MINECRAFT SERVER
 let server = clientE.server("GWJB0vNi5atOcd1l");
-let lastStatus;
+let lastStatus,
+	lastStatusUpdate = 0;
 let statuses = {
 	0: "OFFLINE",
 	1: "ONLINE",
@@ -38,6 +39,7 @@ clientD.once("ready", async () => {
 		await server.get();
 		clientD.user.setActivity({ name: `the server: ${statuses[server.status]}`, type: ActivityType.Watching });
 		lastStatus = server.status;
+		lastStatusUpdate = Date.now();
 	} catch (error) {
 		console.log(`\x1b[31mERROR!!\x1b[37m source: once "ready"`);
 	}
@@ -48,7 +50,10 @@ server.subscribe();
 server.on("status", async (server) => {
 	try {
 		if (server.status != lastStatus) {
-			clientD.user.setActivity({ name: `the server: ${statuses[server.status]}`, type: ActivityType.Watching });
+			if (Date.now() - lastStatusUpdate > 1000) {
+				clientD.user.setActivity({ name: `the server: ${statuses[server.status]}`, type: ActivityType.Watching });
+				lastStatusUpdate = Date.now();
+			}
 
 			if (server.status == server.STATUS.ONLINE) {
 				clientD.channels.cache
