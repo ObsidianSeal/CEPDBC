@@ -72,9 +72,7 @@ server.on("status", async (server) => {
 			if (server.status == server.STATUS.OFFLINE) {
 				let account = await clientE.getAccount();
 				await server.setMOTD(
-					`§3§lCivil Engineers’ Paradise§7  |  §a§l1.21.5§7  |  §d§l${
-						Math.round(account.credits * 100) / 100
-					} ☰\n§6> > >§e now 1.21.5 (latest)§7  |  §bDiscord bot is working!`
+					`§3§lCivil Engineers’ Paradise§7  |  §a§l${server.software.version}§7  |  §d§l${Math.round(account.credits * 100) / 100} ☰\n§6> > >§e skull emoji`
 				);
 
 				/*
