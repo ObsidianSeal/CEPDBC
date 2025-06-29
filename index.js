@@ -46,7 +46,11 @@ clientD.once("ready", async () => {
 });
 
 // MINECRAFT SERVER EVENTS
-server.subscribe();
+try {
+	server.subscribe();
+} catch (error) {
+	console.log(`\x1b[31mERROR!!\x1b[37m source: "subscribe"`);
+}
 server.on("status", async (server) => {
 	try {
 		if (server.status != lastStatus) {
