@@ -41,7 +41,7 @@ clientD.once("ready", async () => {
 		lastStatus = server.status;
 		lastStatusUpdate = Date.now();
 	} catch (error) {
-		console.log(`\x1b[31mERROR!!\x1b[37m source: once "ready"`);
+		console.log(`\x1b[31mERROR!!\x1b[37m source: once "ready" [${Date.now()}]`);
 	}
 });
 
@@ -49,7 +49,7 @@ clientD.once("ready", async () => {
 try {
 	server.subscribe();
 } catch (error) {
-	console.log(`\x1b[31mERROR!!\x1b[37m source: "subscribe"`);
+	console.log(`\x1b[31mERROR!!\x1b[37m source: "subscribe" [${Date.now()}]`);
 }
 server.on("status", async (server) => {
 	try {
@@ -113,7 +113,7 @@ server.on("status", async (server) => {
 
 		lastStatus = server.status;
 	} catch (error) {
-		console.log(`\x1b[31mERROR!!\x1b[37m source: on "status"`);
+		console.log(`\x1b[31mERROR!!\x1b[37m source: on "status" [${Date.now()}]`);
 	}
 });
 server.subscribe("console");
@@ -132,11 +132,11 @@ server.on("console:line", async (line) => {
 							.replace(testString, `**${testString.substring(1, testString.length - 1)}** <t:${Math.round(Date.now() / 1000)}:R>`)}`
 					);
 
-				console.log(`\x1b[36mmessage received from server:\x1b[37m ${line}`);
+				console.log(`\x1b[36mmessage received from server:\x1b[37m ${line} [${Date.now()}]`);
 			}
 		}
 	} catch (error) {
-		console.log(`\x1b[31mERROR!!\x1b[37m source: on "console:line"`);
+		console.log(`\x1b[31mERROR!!\x1b[37m source: on "console:line" [${Date.now()}]`);
 	}
 });
 
@@ -250,10 +250,10 @@ clientD.on("messageCreate", async (message) => {
 					.replaceAll('"', '\\"')}"}]`
 			);
 
-			console.log(`\x1b[36mmessage sent to server:\x1b[37m [@${message.author.username}] ${message.content}`);
+			console.log(`\x1b[36mmessage sent to server:\x1b[37m [@${message.author.username}] ${message.content} [${Date.now()}]`);
 		}
 	} catch (error) {
-		console.log(`\x1b[31mERROR!!\x1b[37m source: on "messageCreate"`);
+		console.log(`\x1b[31mERROR!!\x1b[37m source: on "messageCreate" [${Date.now()}]`);
 	}
 });
 
@@ -270,9 +270,9 @@ async function commandLogMessage(interaction, message) {
 			displayName = "\x1b[33m[DM]\x1b[37m";
 		}
 
-		console.log(`\x1b[35m> /${interaction.commandName}\x1b[37m — ${message} | ${displayName} (${username})`);
+		console.log(`\x1b[35m> /${interaction.commandName}\x1b[37m — ${message} | ${displayName} (${username}) [${Date.now()}]`);
 	} catch (error) {
-		console.log(`\x1b[31mERROR!!\x1b[37m source: commandLogMessage();`);
+		console.log(`\x1b[31mERROR!!\x1b[37m source: commandLogMessage(); [${Date.now()}]`);
 	}
 }
 
@@ -283,10 +283,10 @@ async function errorMessage(interaction, commandName, error) {
 			content: `:fearful: Something went wrong....\n\`\`\`diff\n- ERROR!!\n- ${error}\n\`\`\`\n:bug: **Please report bugs!**\n> report issues here: [pinniped.page/contact](https://pinniped.page/contact)\n> for general <@1373131510936502283> help, use \`/help\``,
 			flags: MessageFlags.Ephemeral,
 		});
-		console.log(`\x1b[31mERROR!! (/${commandName})`);
+		console.log(`\x1b[31mERROR!! (/${commandName}) [${Date.now()}]`);
 		console.log(error);
 	} catch (error) {
-		console.log(`\x1b[31mERROR!!\x1b[37m source: errorMessage();`);
+		console.log(`\x1b[31mERROR!!\x1b[37m source: errorMessage(); [${Date.now()}]`);
 	}
 }
 
