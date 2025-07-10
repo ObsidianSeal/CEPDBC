@@ -49,7 +49,7 @@ clientD.once("ready", async () => {
 try {
 	server.subscribe();
 } catch (error) {
-	console.log(`\x1b[31mERROR!!\x1b[37m source: "subscribe" [${Date.now()}]`);
+	console.log(`\x1b[31mERROR!!\x1b[37m source: subscribe(); [${Date.now()}]`);
 }
 server.on("status", async (server) => {
 	try {
@@ -118,7 +118,11 @@ server.on("status", async (server) => {
 		console.log(`\x1b[31mERROR!!\x1b[37m source: on "status" [${Date.now()}]`);
 	}
 });
-server.subscribe("console");
+try {
+	server.subscribe("console");
+} catch (error) {
+	console.log(`\x1b[31mERROR!!\x1b[37m source: subscribe(console); [${Date.now()}]`);
+}
 server.on("console:line", async (line) => {
 	try {
 		line = line.line;
@@ -140,6 +144,9 @@ server.on("console:line", async (line) => {
 	} catch (error) {
 		console.log(`\x1b[31mERROR!!\x1b[37m source: on "console:line" [${Date.now()}]`);
 	}
+});
+server.on("error", (error) => {
+	console.log(`\x1b[31mERROR!!\x1b[37m source: on "error" [${Date.now()}]`);
 });
 
 // RESPOND TO SLASH COMMANDS
