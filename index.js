@@ -145,7 +145,7 @@ server.on("console:line", async (line) => {
 		console.log(`\x1b[31mERROR!!\x1b[37m source: on "console:line" [${Date.now()}]`);
 	}
 });
-server.on("error", (error) => {
+server.on("error", () => {
 	console.log(`\x1b[31mERROR!!\x1b[37m source: on "error" [${Date.now()}]`);
 });
 
