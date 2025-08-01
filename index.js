@@ -40,6 +40,8 @@ clientD.once("ready", async () => {
 		clientD.user.setActivity({ name: `the server: ${statuses[server.status]}`, type: ActivityType.Watching });
 		lastStatus = server.status;
 		lastStatusUpdate = Date.now();
+
+		console.log(server);
 	} catch (error) {
 		console.log(`\x1b[31mERROR!!\x1b[37m source: once "ready" [${Date.now()}]`);
 	}
@@ -52,6 +54,8 @@ try {
 	console.log(`\x1b[31mERROR!!\x1b[37m source: subscribe(); [${Date.now()}]`);
 }
 server.on("status", async (server) => {
+	console.log(server);
+
 	try {
 		if (server.status != lastStatus) {
 			if (Date.now() - lastStatusUpdate > 1000) {
@@ -124,6 +128,8 @@ try {
 	console.log(`\x1b[31mERROR!!\x1b[37m source: subscribe(console); [${Date.now()}]`);
 }
 server.on("console:line", async (line) => {
+	console.log(line);
+
 	try {
 		line = line.line;
 
