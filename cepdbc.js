@@ -80,9 +80,9 @@ server.on("status", async (server) => {
 			if (server.status == server.STATUS.OFFLINE) {
 				let account = await clientE.getAccount();
 				await server.setMOTD(
-					`§3§lCivil Engineers’ Paradise§7  |  §a§l${server.software.version}§7  |  §d§l${
+					`§3§lCivil Engineers’ Paradise§7 | §a§l${server.software.version}§7 | §d§l${
 						Math.round(account.credits * 100) / 100
-					} ☰\n§6> > >§e [urban] planners also welcome! (HELLO!!!!)`
+					} ☰\n§6> > >§e does the Discord bot work?`
 				);
 
 				/*
