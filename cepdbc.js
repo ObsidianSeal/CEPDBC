@@ -29,12 +29,12 @@ let statuses = {
 // MAKE & START THE DISCORD CLIENT
 const clientD = new DiscordClient({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 clientD.login(tokenD);
-clientD.once("ready", async () => {
+clientD.once("clientReady", async () => {
 	try {
 		console.log("\x1b[32mCEPDBC is now online!\n");
-		clientD.channels.cache
-			.get("1349835444740685835")
-			.send(`## <:cepdbc:1373164311127523481> CEPDBC is now online! <:cepdbc:1373164311127523481>\n-# v0.3 @ ${Date.now()} = <t:${Math.round(Date.now() / 1000)}:R>`);
+		clientD.users.fetch("390612175137406978").then((user) => {
+			user.send(`## <:cepdbc:1373164311127523481> CEPDBC is now online! <:cepdbc:1373164311127523481>\n-# v0.3 @ ${Date.now()} = <t:${Math.round(Date.now() / 1000)}:R>`);
+		});
 
 		await server.get();
 		clientD.user.setActivity({ name: `the server: ${statuses[server.status]}`, type: ActivityType.Watching });
