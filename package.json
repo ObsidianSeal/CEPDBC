@@ -19,6 +19,6 @@
 	},
 	"dependencies": {
 		"discord.js": "^14.19.3",
-		"exaroton": "^1.11.3"
+		"exaroton": "^2.0.0"
 	}
 }
