@@ -43,7 +43,7 @@ clientD.once("clientReady", async () => {
 
 		console.log(server);
 	} catch (error) {
-		console.log(`\x1b[31mERROR!!\x1b[37m source: once "ready" [${Date.now()}]`);
+		console.log(`\x1b[31mERROR!!\x1b[37m source: once "ready" [${formatTime(new Date())}]`);
 	}
 });
 
@@ -51,7 +51,7 @@ clientD.once("clientReady", async () => {
 try {
 	server.subscribe();
 } catch (error) {
-	console.log(`\x1b[31mERROR!!\x1b[37m source: subscribe(); [${Date.now()}]`);
+	console.log(`\x1b[31mERROR!!\x1b[37m source: subscribe(); [${formatTime(new Date())}]`);
 }
 server.on("status", async (server) => {
 	console.log(server);
@@ -119,13 +119,13 @@ server.on("status", async (server) => {
 
 		lastStatus = server.status;
 	} catch (error) {
-		console.log(`\x1b[31mERROR!!\x1b[37m source: on "status" [${Date.now()}]`);
+		console.log(`\x1b[31mERROR!!\x1b[37m source: on "status" [${formatTime(new Date())}]`);
 	}
 });
 try {
 	server.subscribe("console");
 } catch (error) {
-	console.log(`\x1b[31mERROR!!\x1b[37m source: subscribe(console); [${Date.now()}]`);
+	console.log(`\x1b[31mERROR!!\x1b[37m source: subscribe(console); [${formatTime(new Date())}]`);
 }
 server.on("console:line", async (line) => {
 	console.log(line);
@@ -144,15 +144,15 @@ server.on("console:line", async (line) => {
 							.replace(testString, `**${testString.substring(1, testString.length - 1)}** <t:${Math.round(Date.now() / 1000)}:R>`)}`
 					);
 
-				console.log(`\x1b[36mmessage received from server:\x1b[37m ${line} [${Date.now()}]`);
+				console.log(`\x1b[36mmessage received from server:\x1b[37m ${line} [${formatTime(new Date())}]`);
 			}
 		}
 	} catch (error) {
-		console.log(`\x1b[31mERROR!!\x1b[37m source: on "console:line" [${Date.now()}]`);
+		console.log(`\x1b[31mERROR!!\x1b[37m source: on "console:line" [${formatTime(new Date())}]`);
 	}
 });
 server.on("error", () => {
-	console.log(`\x1b[31mERROR!!\x1b[37m source: on "error" [${Date.now()}]`);
+	console.log(`\x1b[31mERROR!!\x1b[37m source: on "error" [${formatTime(new Date())}]`);
 });
 
 // RESPOND TO SLASH COMMANDS
@@ -265,12 +265,26 @@ clientD.on("messageCreate", async (message) => {
 					.replaceAll('"', '\\"')}"}]`
 			);
 
-			console.log(`\x1b[36mmessage sent to server:\x1b[37m [@${message.author.username}] ${message.content} [${Date.now()}]`);
+			console.log(`\x1b[36mmessage sent to server:\x1b[37m [@${message.author.username}] ${message.content} [${formatTime(new Date())}]`);
 		}
 	} catch (error) {
-		console.log(`\x1b[31mERROR!!\x1b[37m source: on "messageCreate" [${Date.now()}]`);
+		console.log(`\x1b[31mERROR!!\x1b[37m source: on "messageCreate" [${formatTime(new Date())}]`);
 	}
 });
+
+// UTILITY: FORMATE TIME FROM DATE (COPIED FROM OMEGA SEAL, ADAPTED FROM THE GAME OF NUMBERS)
+function formatTime(date) {
+	let hour = date.getHours();
+	let minute = date.getMinutes();
+	let second = date.getSeconds();
+
+	let half = "AM";
+	if (hour >= 12) half = "PM";
+	if (hour == 0) hour = 12;
+	if (hour > 12) hour = hour % 12;
+
+	return `${hour}:${minute.toString().padStart(2, "0")}:${second.toString().padStart(2, "0")} ${half}`;
+}
 
 // UTILITY: LOG COMMAND USAGE TO CONSOLE
 async function commandLogMessage(interaction, message) {
@@ -285,9 +299,9 @@ async function commandLogMessage(interaction, message) {
 			displayName = "\x1b[33m[DM]\x1b[37m";
 		}
 
-		console.log(`\x1b[35m> /${interaction.commandName}\x1b[37m — ${message} | ${displayName} (${username}) [${Date.now()}]`);
+		console.log(`\x1b[35m> /${interaction.commandName}\x1b[37m — ${message} | ${displayName} (${username}) [${formatTime(new Date())}]`);
 	} catch (error) {
-		console.log(`\x1b[31mERROR!!\x1b[37m source: commandLogMessage(); [${Date.now()}]`);
+		console.log(`\x1b[31mERROR!!\x1b[37m source: commandLogMessage(); [${formatTime(new Date())}]`);
 	}
 }
 
@@ -298,10 +312,10 @@ async function errorMessage(interaction, commandName, error) {
 			content: `:fearful: Something went wrong....\n\`\`\`diff\n- ERROR!!\n- ${error}\n\`\`\`\n:bug: **Please report bugs!**\n> report issues here: [pinniped.page/contact](https://pinniped.page/contact)\n> for general <@1373131510936502283> help, use \`/help\``,
 			flags: MessageFlags.Ephemeral,
 		});
-		console.log(`\x1b[31mERROR!! (/${commandName}) [${Date.now()}]`);
+		console.log(`\x1b[31mERROR!! (/${commandName}) [${formatTime(new Date())}]`);
 		console.log(error);
 	} catch (error) {
-		console.log(`\x1b[31mERROR!!\x1b[37m source: errorMessage(); [${Date.now()}]`);
+		console.log(`\x1b[31mERROR!!\x1b[37m source: errorMessage(); [${formatTime(new Date())}]`);
 	}
 }
 
