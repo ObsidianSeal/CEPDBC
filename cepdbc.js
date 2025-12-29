@@ -33,15 +33,13 @@ clientD.once("clientReady", async () => {
 	try {
 		console.log("\x1b[32mCEPDBC is now online!\n");
 		clientD.users.fetch("390612175137406978").then((user) => {
-			user.send(`## <:cepdbc:1373164311127523481> CEPDBC is now online! <:cepdbc:1373164311127523481>\n-# v0.3 @ ${Date.now()} = <t:${Math.round(Date.now() / 1000)}:R>`);
+			user.send(`## <:cepdbc:1373164311127523481> CEPDBC is now online! <:cepdbc:1373164311127523481>\n-# v0.4 @ ${Date.now()} = <t:${Math.round(Date.now() / 1000)}:R>`);
 		});
 
 		await server.get();
 		clientD.user.setActivity({ name: `the server: ${statuses[server.status]}`, type: ActivityType.Watching });
 		lastStatus = server.status;
 		lastStatusUpdate = Date.now();
-
-		console.log(server);
 	} catch (error) {
 		console.log(`\x1b[31mERROR!!\x1b[37m source: once "ready" [${formatDate(new Date())} ${formatTime(new Date())}]`);
 	}
@@ -54,8 +52,6 @@ try {
 	console.log(`\x1b[31mERROR!!\x1b[37m source: subscribe(); [${formatDate(new Date())} ${formatTime(new Date())}]`);
 }
 server.on("status", async (server) => {
-	console.log(server);
-
 	try {
 		if (server.status != lastStatus) {
 			if (Date.now() - lastStatusUpdate > 1000) {
@@ -128,8 +124,6 @@ try {
 	console.log(`\x1b[31mERROR!!\x1b[37m source: subscribe(console); [${formatDate(new Date())} ${formatTime(new Date())}]`);
 }
 server.on("console:line", async (line) => {
-	console.log(line);
-
 	try {
 		line = line.line;
 
@@ -212,7 +206,7 @@ clientD.on("interactionCreate", async (interaction) => {
 			let playerListString = "";
 			if (status == server.STATUS.ONLINE) {
 				playersString = ` — ${server.players.count}/${server.players.max} players`;
-				if (server.players.count > 0) playerListString = `\n\n:farmer: **PLAYERS:**\n${server.players.list.join(",")}\n-# usernames of online players`;
+				if (server.players.count > 0) playerListString = `\n\n:farmer: **PLAYERS:**\n${server.players.list.join(", ")}\n-# usernames of online players`;
 				else playerListString = `\n\n:farmer: **PLAYERS:**\n...\n-# the server is online, but empty`;
 			}
 
@@ -223,7 +217,7 @@ clientD.on("interactionCreate", async (interaction) => {
 						Date.now() / 1000
 					)}:R>\n\n:bulb: **STATUS:**\n${statusString}${playersString}\n-# note: the server will automatically start if you join\n\n:jigsaw: **VERSION:**\n${
 						server.software.version
-					}\n-# the latest version of Minecraft: Java Edition\n\n:incoming_envelope: **IP:**\nserver.pinniped.page\n-# alternative IP: ${server.address} port ${
+					}\n-# the latest version of Minecraft: Java Edition\n\n:incoming_envelope: **IP:**\nserver.pinniped.page\n-# if that doesn’t work, try ${server.address}:${
 						server.port
 					}\n\n:coin: **CREDITS REMAINING:**\n${Math.round(account.credits * 100) / 100} (about ${Math.round(
 						account.credits / serverRAM
