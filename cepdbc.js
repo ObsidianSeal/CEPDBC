@@ -33,7 +33,7 @@ clientD.once("clientReady", async () => {
 	try {
 		console.log("\x1b[32mCEPDBC is now online!\n");
 		clientD.users.fetch("390612175137406978").then((user) => {
-			user.send(`## <:cepdbc:1373164311127523481> CEPDBC is now online! <:cepdbc:1373164311127523481>\n-# v0.4 @ ${Date.now()} = <t:${Math.round(Date.now() / 1000)}:R>`);
+			user.send(`## <:cepdbc:1373164311127523481> CEPDBC is now online! <:cepdbc:1373164311127523481>\n-# v0.5 @ ${Date.now()} = <t:${Math.round(Date.now() / 1000)}:R>`);
 		});
 
 		await server.get();
@@ -69,8 +69,12 @@ server.on("status", async (server) => {
 					);
 
 				clientD.channels.cache.get("1373444936799617054").permissionOverwrites.edit("1349764046274170930", { SendMessages: true });
+				clientD.channels.cache.get("1373444936799617054").send(":green_circle: This channel is now open.\n-# Messages sent here will appear on the server.");
 			} else {
 				clientD.channels.cache.get("1373444936799617054").permissionOverwrites.edit("1349764046274170930", { SendMessages: false });
+				if (server.status == server.STATUS.OFFLINE) {
+					clientD.channels.cache.get("1373444936799617054").send(":prohibited: This channel is now closed.\n-# The server is offline.");
+				}
 			}
 
 			if (server.status == server.STATUS.OFFLINE) {
@@ -162,7 +166,7 @@ clientD.on("interactionCreate", async (interaction) => {
 
 			await interaction.reply(`:ping_pong: **Pong!**\n> bot ping: \`${botPing}\`ms\n> API ping: \`${wsPing}\`ms`);
 
-			commandLogMessage(interaction, `${botPing} & ${wsPing}`);
+			logMessage(interaction, `${botPing} & ${wsPing}`);
 		} catch (error) {
 			errorMessage(interaction, commandName, error);
 		}
@@ -187,7 +191,7 @@ clientD.on("interactionCreate", async (interaction) => {
 				});
 			}
 
-			commandLogMessage(interaction, `...`);
+			logMessage(interaction, `...`);
 		} catch (error) {
 			errorMessage(interaction, commandName, error);
 		}
@@ -229,7 +233,7 @@ clientD.on("interactionCreate", async (interaction) => {
 
 			await interaction.reply({ embeds: [serverDetailsEmbed] });
 
-			commandLogMessage(interaction, `${statusString}`);
+			logMessage(interaction, `${statusString}`);
 		} catch (error) {
 			errorMessage(interaction, commandName, error);
 		}
@@ -242,7 +246,7 @@ clientD.on("interactionCreate", async (interaction) => {
 				":printer: **Command syntaxes and descriptions.**\n> `/ping` Latency information.\n> `/start` Start the Minecraft server.\n> `/status` Check the Minecraft server’s status, version, and more.\n> `/help` Learn more about CEPDBC’s commands."
 			);
 
-			commandLogMessage(interaction, `...`);
+			logMessage(interaction, `...`);
 		} catch (error) {
 			errorMessage(interaction, commandName, error);
 		}
@@ -253,13 +257,16 @@ clientD.on("interactionCreate", async (interaction) => {
 clientD.on("messageCreate", async (message) => {
 	try {
 		if (server.status == server.STATUS.ONLINE && message.channelId == "1373444936799617054" && !message.author.bot) {
+			let name = message.member.nickname;
+			if (name === null) name = message.author.displayName;
+
 			server.executeCommand(
-				`tellraw @a ["",{"text":"[","color":"gray"},{"text":"@${message.author.username}","color":"gold"},{"text":"]","color":"gray"},{"text":" ${message.content
+				`tellraw @a ["",{"text":"[","color":"gray"},{"text":"@${name}","color":"gold"},{"text":"]","color":"gray"},{"text":" ${message.content
 					.replaceAll("\\", "\\\\")
 					.replaceAll('"', '\\"')}"}]`
 			);
 
-			console.log(`\x1b[36mmessage sent to server:\x1b[37m [@${message.author.username}] ${message.content} [${formatDate(new Date())} ${formatTime(new Date())}]`);
+			console.log(`\x1b[36mmessage sent to server:\x1b[37m [@${name}] ${message.content} [${formatDate(new Date())} ${formatTime(new Date())}]`);
 		}
 	} catch (error) {
 		console.log(`\x1b[31mERROR!!\x1b[37m source: on "messageCreate" [${formatDate(new Date())} ${formatTime(new Date())}]`);
@@ -289,34 +296,31 @@ function formatTime(date) {
 	return `${hour}:${minute.toString().padStart(2, "0")}:${second.toString().padStart(2, "0")} ${half}`;
 }
 
-// UTILITY: LOG COMMAND USAGE TO CONSOLE
-async function commandLogMessage(interaction, message) {
+// UTILITY: LOG INTERACTION
+async function logMessage(interaction, message) {
 	try {
-		let username, displayName;
+		let name;
+		if (interaction.inGuild()) name = interaction.user.username;
+		else name = `\x1b[33m[DM]\x1b[37m ${interaction.user.username}`;
 
-		if (interaction.inGuild()) {
-			username = interaction.member.user.username;
-			displayName = interaction.member.user.displayName;
-		} else {
-			username = interaction.user.username;
-			displayName = "\x1b[33m[DM]\x1b[37m";
-		}
-
-		console.log(`\x1b[35m> /${interaction.commandName}\x1b[37m — ${message} | ${displayName} (${username}) [${formatDate(new Date())} ${formatTime(new Date())}]`);
+		console.log(`\x1b[35m> /${interaction.commandName}\x1b[37m — ${message} | ${name} [${formatDate(new Date())} ${formatTime(new Date())}]`);
 	} catch (error) {
-		console.log(`\x1b[31mERROR!!\x1b[37m source: commandLogMessage(); [${formatDate(new Date())} ${formatTime(new Date())}]`);
+		console.log(`\x1b[31mERROR!!\x1b[37m source: logMessage(); [${formatDate(new Date())} ${formatTime(new Date())}]`);
 	}
 }
 
-// UTILITY: ERROR RESPONSE & LOG TO CONSOLE
+// UTILITY: LOG INTERACTION ERROR & SEND RESPONSE
 async function errorMessage(interaction, commandName, error) {
 	try {
+		console.log(`\x1b[31mERROR!! (/${commandName}) [${formatDate(new Date())} ${formatTime(new Date())}]`);
+		console.log(error);
+
+		logMessage(interaction, "ERROR!!");
+
 		await interaction.reply({
 			content: `:fearful: Something went wrong....\n\`\`\`diff\n- ERROR!!\n- ${error}\n\`\`\`\n:bug: **Please report bugs!**\n> report issues here: [pinniped.page/contact](https://pinniped.page/contact)\n> for general <@1373131510936502283> help, use \`/help\``,
 			flags: MessageFlags.Ephemeral,
 		});
-		console.log(`\x1b[31mERROR!! (/${commandName}) [${formatDate(new Date())} ${formatTime(new Date())}]`);
-		console.log(error);
 	} catch (error) {
 		console.log(`\x1b[31mERROR!!\x1b[37m source: errorMessage(); [${formatDate(new Date())} ${formatTime(new Date())}]`);
 	}
