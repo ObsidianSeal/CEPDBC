@@ -42,6 +42,7 @@ clientD.once("clientReady", async () => {
 		lastStatusUpdate = Date.now();
 	} catch (error) {
 		console.log(`\x1b[31mERROR!!\x1b[37m source: once "ready" [${formatDate(new Date())} ${formatTime(new Date())}]`);
+		console.log(error);
 	}
 });
 
@@ -50,6 +51,7 @@ try {
 	server.subscribe();
 } catch (error) {
 	console.log(`\x1b[31mERROR!!\x1b[37m source: subscribe(); [${formatDate(new Date())} ${formatTime(new Date())}]`);
+	console.log(error);
 }
 server.on("status", async (server) => {
 	try {
@@ -120,12 +122,14 @@ server.on("status", async (server) => {
 		lastStatus = server.status;
 	} catch (error) {
 		console.log(`\x1b[31mERROR!!\x1b[37m source: on "status" [${formatDate(new Date())} ${formatTime(new Date())}]`);
+		console.log(error);
 	}
 });
 try {
 	server.subscribe("console");
 } catch (error) {
 	console.log(`\x1b[31mERROR!!\x1b[37m source: subscribe(console); [${formatDate(new Date())} ${formatTime(new Date())}]`);
+	console.log(error);
 }
 server.on("console:line", async (line) => {
 	try {
@@ -147,6 +151,7 @@ server.on("console:line", async (line) => {
 		}
 	} catch (error) {
 		console.log(`\x1b[31mERROR!!\x1b[37m source: on "console:line" [${formatDate(new Date())} ${formatTime(new Date())}]`);
+		console.log(error);
 	}
 });
 server.on("error", () => {
@@ -169,6 +174,7 @@ clientD.on("interactionCreate", async (interaction) => {
 			logMessage(interaction, `${botPing} & ${wsPing}`);
 		} catch (error) {
 			errorMessage(interaction, commandName, error);
+			console.log(error);
 		}
 	}
 
@@ -194,6 +200,7 @@ clientD.on("interactionCreate", async (interaction) => {
 			logMessage(interaction, `...`);
 		} catch (error) {
 			errorMessage(interaction, commandName, error);
+			console.log(error);
 		}
 	}
 
@@ -236,6 +243,7 @@ clientD.on("interactionCreate", async (interaction) => {
 			logMessage(interaction, `${statusString}`);
 		} catch (error) {
 			errorMessage(interaction, commandName, error);
+			console.log(error);
 		}
 	}
 
@@ -249,6 +257,7 @@ clientD.on("interactionCreate", async (interaction) => {
 			logMessage(interaction, `...`);
 		} catch (error) {
 			errorMessage(interaction, commandName, error);
+			console.log(error);
 		}
 	}
 });
@@ -270,6 +279,7 @@ clientD.on("messageCreate", async (message) => {
 		}
 	} catch (error) {
 		console.log(`\x1b[31mERROR!!\x1b[37m source: on "messageCreate" [${formatDate(new Date())} ${formatTime(new Date())}]`);
+		console.log(error);
 	}
 });
 
@@ -306,6 +316,7 @@ async function logMessage(interaction, message) {
 		console.log(`\x1b[35m> /${interaction.commandName}\x1b[37m — ${message} | ${name} [${formatDate(new Date())} ${formatTime(new Date())}]`);
 	} catch (error) {
 		console.log(`\x1b[31mERROR!!\x1b[37m source: logMessage(); [${formatDate(new Date())} ${formatTime(new Date())}]`);
+		console.log(error);
 	}
 }
 
@@ -323,6 +334,7 @@ async function errorMessage(interaction, commandName, error) {
 		});
 	} catch (error) {
 		console.log(`\x1b[31mERROR!!\x1b[37m source: errorMessage(); [${formatDate(new Date())} ${formatTime(new Date())}]`);
+		console.log(error);
 	}
 }
 
