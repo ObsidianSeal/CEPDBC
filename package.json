@@ -1,6 +1,6 @@
 {
 	"name": "cepdbc",
-	"version": "0.5",
+	"version": "0.6",
 	"author": "Obsidian_Seal",
 	"description": "the Civil Engineers’ Paradise Discord Bot Companion",
 	"main": "cepdbc.js",
