@@ -37,7 +37,7 @@ clientD.once("clientReady", async () => {
 		});
 
 		await server.get();
-		clientD.user.setActivity({ name: `the server: ${statuses[server.status]}`, type: ActivityType.Watching });
+		clientD.user.setActivity({ name: `the server is ${statuses[server.status]}`, type: ActivityType.Streaming });
 		lastStatus = server.status;
 		lastStatusUpdate = Date.now();
 	} catch (error) {
@@ -57,7 +57,7 @@ server.on("status", async (server) => {
 	try {
 		if (server.status != lastStatus) {
 			if (Date.now() - lastStatusUpdate > 1000) {
-				clientD.user.setActivity({ name: `the server: ${statuses[server.status]}`, type: ActivityType.Watching });
+				clientD.user.setActivity({ name: `the server is ${statuses[server.status]}`, type: ActivityType.Streaming });
 				lastStatusUpdate = Date.now();
 			}
 
