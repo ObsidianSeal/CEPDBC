@@ -9,10 +9,10 @@ const commands = [
 	// "/ping"
 	new SlashCommandBuilder().setName("ping").setDescription("Latency information."),
 
-	// "start"
+	// "/start"
 	new SlashCommandBuilder().setName("start").setDescription("Start the Minecraft server."),
 
-	// "server"
+	// "/server"
 	new SlashCommandBuilder().setName("server").setDescription("Check the Minecraft server’s status, version, and more."),
 
 	// "/help"

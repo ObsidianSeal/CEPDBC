@@ -33,7 +33,7 @@ clientD.once("clientReady", async () => {
 	try {
 		console.log("\x1b[32mCEPDBC is now online!\n");
 		clientD.users.fetch("390612175137406978").then((user) => {
-			user.send(`## <:cepdbc:1373164311127523481> CEPDBC is now online! <:cepdbc:1373164311127523481>\n-# v0.5 @ ${Date.now()} = <t:${Math.round(Date.now() / 1000)}:R>`);
+			user.send(`## <:cepdbc:1373164311127523481> CEPDBC is now online! <:cepdbc:1373164311127523481>\n-# v0.6 @ ${Date.now()} = <t:${Math.round(Date.now() / 1000)}:R>`);
 		});
 
 		await server.get();
