@@ -1,7 +1,7 @@
 # CEPDBC
 
-Civil Engineers’ Paradise Discord Bot Companion (CEPDBC)
+the Civil Engineers’ Paradise Discord Bot Companion
 
-Discord.js bot + exaroton API
+[Discord.js](https://discord.js.org/) bot + [exaroton API](https://developers.exaroton.com/)
 
-no `node_modules` or `config.json` or `.vscode`
+no `node_modules` or `config.json`
