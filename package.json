@@ -6,6 +6,6 @@
 	"main": "cepdbc.js",
 	"dependencies": {
 		"discord.js": "^14.25.1",
-		"exaroton": "^2.0.1"
+		"exaroton": "^2.0.2"
 	}
 }
