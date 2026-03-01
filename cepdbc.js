@@ -1,7 +1,7 @@
 // *** much of this code is copied from Omega Seal ***
 
 // IMPORT THINGS
-const { tokenD, tokenE } = require("./config.json");
+const { tokenD, tokenE, botID } = require("./config.json");
 const { Client: DiscordClient, GatewayIntentBits, ActivityType, InteractionType, MessageFlags, EmbedBuilder, PermissionOverwrites, PermissionsBitField } = require("discord.js");
 const { Client: ExarotonClient } = require("exaroton");
 
@@ -133,7 +133,7 @@ try {
 }
 server.on("console:line", async (line) => {
 	try {
-		line = line.line;
+		line = line.line.replace(/^\[..:..:.. INFO\]: /, "");
 
 		for (let player of server.players.list) {
 			let testString = `<${player}>`;
@@ -329,7 +329,7 @@ async function errorMessage(interaction, commandName, error) {
 		logMessage(interaction, "ERROR!!");
 
 		await interaction.reply({
-			content: `:fearful: Something went wrong....\n\`\`\`diff\n- ERROR!!\n- ${error}\n\`\`\`\n:bug: **Please report bugs!**\n> report issues here: [pinniped.page/contact](https://pinniped.page/contact)\n> for general <@1373131510936502283> help, use \`/help\``,
+			content: `:fearful: Something went wrong....\n\`\`\`diff\n- ERROR!!\n- ${error}\n\`\`\`\n:bug: **Please report bugs!**\n> report issues here: [pinniped.page/contact](https://pinniped.page/contact)\n> for general <@${botID}}> help, use \`/help\``,
 			flags: MessageFlags.Ephemeral,
 		});
 	} catch (error) {
