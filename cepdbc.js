@@ -66,8 +66,8 @@ server.on("status", async (server) => {
 					.get("1349764047234662503")
 					.send(
 						`## <:cep:1373149617557995600> Civil Engineers’ Paradise is now online! <:cep:1373149617557995600>\n-# someone started the server @ ${Date.now()} = <t:${Math.round(
-							Date.now() / 1000
-						)}:R>\n-# use \`/server\` for more information`
+							Date.now() / 1000,
+						)}:R>\n-# use \`/server\` for more information`,
 					);
 
 				clientD.channels.cache.get("1373444936799617054").permissionOverwrites.edit("1349764046274170930", { SendMessages: true });
@@ -84,7 +84,7 @@ server.on("status", async (server) => {
 				await server.setMOTD(
 					`§3§lCivil Engineers’ Paradise§7 | §a§l${server.software.version}§7 | §d§l${
 						Math.round(account.credits * 100) / 100
-					} ☰\n§6> > >§e does the Discord bot work?`
+					} ☰\n§6> > >§e does the Discord bot work?`,
 				);
 
 				/*
@@ -143,7 +143,7 @@ server.on("console:line", async (line) => {
 					.send(
 						`${line
 							.substring(line.indexOf(testString))
-							.replace(testString, `**${testString.substring(1, testString.length - 1)}** <t:${Math.round(Date.now() / 1000)}:R>`)}`
+							.replace(testString, `**${testString.substring(1, testString.length - 1)}** <t:${Math.round(Date.now() / 1000)}:R>`)}`,
 					);
 
 				console.log(`\x1b[36mmessage received from server:\x1b[37m ${line} [${formatDate(new Date())} ${formatTime(new Date())}]`);
@@ -225,18 +225,18 @@ clientD.on("interactionCreate", async (interaction) => {
 				.setTitle("CIVIL ENGINEERS’ PARADISE  //  MINECRAFT SERVER STATUS")
 				.setDescription(
 					`<:cep:1373149617557995600> <t:${Math.round(
-						Date.now() / 1000
+						Date.now() / 1000,
 					)}:R>\n\n:bulb: **STATUS:**\n${statusString}${playersString}\n-# note: the server will automatically start if you join\n\n:jigsaw: **VERSION:**\n${
 						server.software.version
 					}\n-# the latest version of Minecraft: Java Edition\n\n:incoming_envelope: **IP:**\nserver.pinniped.page\n-# if that doesn’t work, try ${server.address}:${
 						server.port
 					}\n\n:coin: **CREDITS REMAINING:**\n${Math.round(account.credits * 100) / 100} (about ${Math.round(
-						account.credits / serverRAM
+						account.credits / serverRAM,
 					)} hours of server use)\n-# basis for calculation: at ${serverRAM} GB RAM, ${serverRAM} credits are consumed hourly\n\n:scroll: **MESSAGE:**\n\`${server.motd
 						.replaceAll(/§./g, "")
-						.replaceAll(/\n/g, "`\n`")}\`\n-# this is the server’s “MOTD” a.k.a. “message of the day”${playerListString}`
+						.replaceAll(/\n/g, "`\n`")}\`\n-# this is the server’s “MOTD” a.k.a. “message of the day”${playerListString}`,
 				)
-				.setColor("#00aaaa");
+				.setColor("#aabbcc");
 
 			await interaction.reply({ embeds: [serverDetailsEmbed] });
 
@@ -251,7 +251,7 @@ clientD.on("interactionCreate", async (interaction) => {
 	if (commandName === "help") {
 		try {
 			await interaction.reply(
-				":printer: **Command syntaxes and descriptions.**\n> `/ping` Latency information.\n> `/start` Start the Minecraft server.\n> `/status` Check the Minecraft server’s status, version, and more.\n> `/help` Learn more about CEPDBC’s commands."
+				":printer: **Command syntaxes and descriptions.**\n> `/ping` Latency information.\n> `/start` Start the Minecraft server.\n> `/status` Check the Minecraft server’s status, version, and more.\n> `/help` Learn more about CEPDBC’s commands.",
 			);
 
 			logMessage(interaction, `...`);
@@ -272,7 +272,7 @@ clientD.on("messageCreate", async (message) => {
 			server.executeCommand(
 				`tellraw @a ["",{"text":"[","color":"gray"},{"text":"@${name}","color":"gold"},{"text":"]","color":"gray"},{"text":" ${message.content
 					.replaceAll("\\", "\\\\")
-					.replaceAll('"', '\\"')}"}]`
+					.replaceAll('"', '\\"')}"}]`,
 			);
 
 			console.log(`\x1b[36mmessage sent to server:\x1b[37m [@${name}] ${message.content} [${formatDate(new Date())} ${formatTime(new Date())}]`);
