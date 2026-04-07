@@ -1,10 +1,11 @@
 {
 	"name": "cepdbc",
-	"version": "0.6",
+	"version": "0.7",
 	"author": "Obsidian_Seal",
 	"description": "the Civil Engineers’ Paradise Discord Bot Companion",
 	"main": "cepdbc.js",
 	"dependencies": {
+		"@cloudflare/speedtest": "^1.7.0",
 		"discord.js": "^14.25.1",
 		"exaroton": "^2.0.2"
 	}

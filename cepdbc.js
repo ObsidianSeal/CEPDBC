@@ -1,9 +1,10 @@
 // *** much of this code is copied from Omega Seal ***
 
-// IMPORT THINGS
-const { tokenD, tokenE, botID } = require("./config.json");
-const { Client: DiscordClient, GatewayIntentBits, ActivityType, InteractionType, MessageFlags, EmbedBuilder, PermissionOverwrites, PermissionsBitField } = require("discord.js");
+// IMPORTS
+const { tokenD, tokenE } = require("./config.json");
+const { Client: DiscordClient, GatewayIntentBits, ActivityType, InteractionType, MessageFlags, EmbedBuilder } = require("discord.js");
 const { Client: ExarotonClient } = require("exaroton");
+const SpeedTest = require("@cloudflare/speedtest").default;
 
 // MAKE THE EXAROTON CLIENT
 const clientE = new ExarotonClient(tokenE);
@@ -33,7 +34,7 @@ clientD.once("clientReady", async () => {
 	try {
 		console.log("\x1b[32mCEPDBC is now online!\n");
 		clientD.users.fetch("390612175137406978").then((user) => {
-			user.send(`## <:cepdbc:1373164311127523481> CEPDBC is now online! <:cepdbc:1373164311127523481>\n-# v0.6 @ ${Date.now()} = <t:${Math.round(Date.now() / 1000)}:R>`);
+			user.send(`## <:cepdbc:1373164311127523481> CEPDBC is now online! <:cepdbc:1373164311127523481>\n-# v0.7 @ ${Date.now()} = <t:${Math.round(Date.now() / 1000)}:R>`);
 		});
 
 		await server.get();
@@ -41,8 +42,7 @@ clientD.once("clientReady", async () => {
 		lastStatus = server.status;
 		lastStatusUpdate = Date.now();
 	} catch (error) {
-		console.log(`\x1b[31mERROR!!\x1b[37m source: once "ready" [${formatDate(new Date())} ${formatTime(new Date())}]`);
-		console.log(error);
+		otherErrorMessage(error);
 	}
 });
 
@@ -50,8 +50,7 @@ clientD.once("clientReady", async () => {
 try {
 	server.subscribe();
 } catch (error) {
-	console.log(`\x1b[31mERROR!!\x1b[37m source: subscribe(); [${formatDate(new Date())} ${formatTime(new Date())}]`);
-	console.log(error);
+	otherErrorMessage(error);
 }
 server.on("status", async (server) => {
 	try {
@@ -121,15 +120,13 @@ server.on("status", async (server) => {
 
 		lastStatus = server.status;
 	} catch (error) {
-		console.log(`\x1b[31mERROR!!\x1b[37m source: on "status" [${formatDate(new Date())} ${formatTime(new Date())}]`);
-		console.log(error);
+		otherErrorMessage(error);
 	}
 });
 try {
 	server.subscribe("console");
 } catch (error) {
-	console.log(`\x1b[31mERROR!!\x1b[37m source: subscribe(console); [${formatDate(new Date())} ${formatTime(new Date())}]`);
-	console.log(error);
+	otherErrorMessage(error);
 }
 server.on("console:line", async (line) => {
 	try {
@@ -150,8 +147,7 @@ server.on("console:line", async (line) => {
 			}
 		}
 	} catch (error) {
-		console.log(`\x1b[31mERROR!!\x1b[37m source: on "console:line" [${formatDate(new Date())} ${formatTime(new Date())}]`);
-		console.log(error);
+		otherErrorMessage(error);
 	}
 });
 server.on("error", () => {
@@ -167,14 +163,26 @@ clientD.on("interactionCreate", async (interaction) => {
 	if (commandName === "ping") {
 		try {
 			let botPing = Date.now() - interaction.createdTimestamp;
-			let wsPing = clientD.ws.ping;
+			await interaction.deferReply();
 
-			await interaction.reply(`:ping_pong: **Pong!**\n> bot ping: \`${botPing}\`ms\n> API ping: \`${wsPing}\`ms`);
+			new SpeedTest().onFinish = async (results) => {
+				try {
+					let webSocketPing = client.ws.ping;
 
-			logMessage(interaction, `${botPing} & ${wsPing}`);
+					await interaction.editReply(
+						`:ping_pong: **Pong!**\n> this interaction was received **${botPing}ms** after it was created\n> the Discord API websocket is reporting a latency of **${webSocketPing}ms**\n> on a network with upload/download speeds of **${Math.round(results.getSummary().upload / 1000000)}Mbps** and **${Math.round(results.getSummary().download / 1000000)}Mbps**\n> network latency is **${Math.round(results.getSummary().latency)}ms**`,
+					);
+
+					logMessage(
+						interaction,
+						`${botPing}, ${webSocketPing}, ${Math.round(results.getSummary().upload / 1000000)}, ${Math.round(results.getSummary().upload / 1000000)}, ${Math.round(results.getSummary().latency)}`,
+					);
+				} catch (error) {
+					errorMessage(interaction, error, true);
+				}
+			};
 		} catch (error) {
-			errorMessage(interaction, commandName, error);
-			console.log(error);
+			errorMessage(interaction, error, true);
 		}
 	}
 
@@ -197,10 +205,9 @@ clientD.on("interactionCreate", async (interaction) => {
 				});
 			}
 
-			logMessage(interaction, `...`);
+			logMessage(interaction, "started");
 		} catch (error) {
-			errorMessage(interaction, commandName, error);
-			console.log(error);
+			errorMessage(interaction, error, false);
 		}
 	}
 
@@ -242,8 +249,7 @@ clientD.on("interactionCreate", async (interaction) => {
 
 			logMessage(interaction, `${statusString}`);
 		} catch (error) {
-			errorMessage(interaction, commandName, error);
-			console.log(error);
+			errorMessage(interaction, error, false);
 		}
 	}
 
@@ -254,10 +260,9 @@ clientD.on("interactionCreate", async (interaction) => {
 				":printer: **Command syntaxes and descriptions.**\n> `/ping` Latency information.\n> `/start` Start the Minecraft server.\n> `/status` Check the Minecraft server’s status, version, and more.\n> `/help` Learn more about CEPDBC’s commands.",
 			);
 
-			logMessage(interaction, `...`);
+			logMessage(interaction, "sent");
 		} catch (error) {
-			errorMessage(interaction, commandName, error);
-			console.log(error);
+			errorMessage(interaction, error, false);
 		}
 	}
 });
@@ -278,12 +283,11 @@ clientD.on("messageCreate", async (message) => {
 			console.log(`\x1b[36mmessage sent to server:\x1b[37m [@${name}] ${message.content} [${formatDate(new Date())} ${formatTime(new Date())}]`);
 		}
 	} catch (error) {
-		console.log(`\x1b[31mERROR!!\x1b[37m source: on "messageCreate" [${formatDate(new Date())} ${formatTime(new Date())}]`);
-		console.log(error);
+		otherErrorMessage(error);
 	}
 });
 
-// UTILITY: FORMATE DATE FROM DATE
+// UTILITY: FORMAT DATE STRING FROM DATE OBJECT
 function formatDate(date) {
 	let year = date.getFullYear();
 	let month = date.getMonth() + 1;
@@ -292,7 +296,7 @@ function formatDate(date) {
 	return `${year}/${month.toString().padStart(2, "0")}/${day.toString().padStart(2, "0")}`;
 }
 
-// UTILITY: FORMATE TIME FROM DATE (COPIED FROM OMEGA SEAL, ADAPTED FROM THE GAME OF NUMBERS)
+// UTILITY: FORMAT TIME FROM DATE (ADAPTED FROM THE GAME OF NUMBERS)
 function formatTime(date) {
 	let hour = date.getHours();
 	let minute = date.getMinutes();
@@ -308,34 +312,39 @@ function formatTime(date) {
 
 // UTILITY: LOG INTERACTION
 async function logMessage(interaction, message) {
-	try {
-		let name;
-		if (interaction.inGuild()) name = interaction.user.username;
-		else name = `\x1b[33m[DM]\x1b[37m ${interaction.user.username}`;
+	let name = interaction.user.username;
+	if (!interaction.inGuild()) name = `\x1b[33m[DM]\x1b[37m ${name}`;
 
-		console.log(`\x1b[35m> /${interaction.commandName}\x1b[37m — ${message} | ${name} [${formatDate(new Date())} ${formatTime(new Date())}]`);
-	} catch (error) {
-		console.log(`\x1b[31mERROR!!\x1b[37m source: logMessage(); [${formatDate(new Date())} ${formatTime(new Date())}]`);
-		console.log(error);
-	}
+	console.log(`\x1b[35m> /${interaction.commandName}\x1b[37m — ${message} | ${name} [${formatDate(new Date())} ${formatTime(new Date())}]\x1b[37m`);
 }
 
 // UTILITY: LOG INTERACTION ERROR & SEND RESPONSE
-async function errorMessage(interaction, commandName, error) {
+async function errorMessage(interaction, error, deferred) {
 	try {
-		console.log(`\x1b[31mERROR!! (/${commandName}) [${formatDate(new Date())} ${formatTime(new Date())}]`);
+		logMessage(interaction, "\x1b[31mERROR!!\x1b[37m");
 		console.log(error);
 
-		logMessage(interaction, "ERROR!!");
-
-		await interaction.reply({
-			content: `:fearful: Something went wrong....\n\`\`\`diff\n- ERROR!!\n- ${error}\n\`\`\`\n:bug: **Please report bugs!**\n> report issues here: [pinniped.page/contact](https://pinniped.page/contact)\n> for general <@${botID}}> help, use \`/help\``,
-			flags: MessageFlags.Ephemeral,
-		});
-	} catch (error) {
-		console.log(`\x1b[31mERROR!!\x1b[37m source: errorMessage(); [${formatDate(new Date())} ${formatTime(new Date())}]`);
-		console.log(error);
+		if (deferred) {
+			await interaction.editReply(":bangbang: Deferred interaction experienced an error.");
+			await interaction.followUp({
+				content: `:fearful: Something went wrong....\n\`\`\`diff\n- ERROR!!\n- ${error}\n\`\`\`\n:bug: **Please report bugs!**\n> submit a bug report: [pinniped.page/contact](https://pinniped.page/contact)\n> or, for general help, use \`/help\``,
+				flags: MessageFlags.Ephemeral,
+			});
+		} else {
+			await interaction.reply({
+				content: `:fearful: Something went wrong....\n\`\`\`diff\n- ERROR!!\n- ${error}\n\`\`\`\n:bug: **Please report bugs!**\n> submit a bug report: [pinniped.page/contact](https://pinniped.page/contact)\n> or, for general help, use \`/help\``,
+				flags: MessageFlags.Ephemeral,
+			});
+		}
+	} catch (error2) {
+		console.log(error2);
 	}
+}
+
+// UTILITY: OTHER ERROR
+function otherErrorMessage(error) {
+	console.log(`\x1b[31mERROR!!\x1b[37m [${formatDate(new Date())} ${formatTime(new Date())}]\x1b[37m`);
+	console.log(error);
 }
 
 /*
