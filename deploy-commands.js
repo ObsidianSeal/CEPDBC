@@ -7,7 +7,7 @@ const { tokenD, botID } = require("./config.json");
 // MAKE COMMANDS
 const commands = [
 	// "/ping"
-	new SlashCommandBuilder().setName("ping").setDescription("Latency information."),
+	new SlashCommandBuilder().setName("ping").setDescription("Latency and network speed details."),
 
 	// "/start"
 	new SlashCommandBuilder().setName("start").setDescription("Start the Minecraft server."),
