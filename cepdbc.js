@@ -32,10 +32,12 @@ let statuses = {
 
 // MAKE & START THE DISCORD CLIENT
 const clientD = new DiscordClient({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
+let startTime = 0;
 clientD.login(tokenD);
 clientD.once("clientReady", async () => {
 	try {
-		console.log("\x1b[32mCEPDBC is now online!\n");
+		startTime = Date.now();
+		console.log("\x1b[32mCEPDBC is now online!\x1b[37m\n");
 		clientD.users.fetch("390612175137406978").then((user) => {
 			user.send(
 				`## <:cepdbc:1373164311127523481> CEPDBC is now online! <:cepdbc:1373164311127523481>\n-# v${VERSION} @ ${Date.now()} = <t:${Math.round(Date.now() / 1000)}:R>`,
@@ -172,7 +174,7 @@ clientD.on("interactionCreate", async (interaction) => {
 
 			new SpeedTest().onFinish = async (results) => {
 				try {
-					let webSocketPing = client.ws.ping;
+					let webSocketPing = clientD.ws.ping;
 
 					await interaction.editReply(
 						`:ping_pong: **Pong!**\n> - interaction received **${botPing}ms** after its creation\n> - Discord API websocket is reporting a latency of **${webSocketPing}ms**\n> - on a network with upload/download speeds of **${Math.round(results.getSummary().upload / 1000000)}Mbps** and **${Math.round(results.getSummary().download / 1000000)}Mbps**\n> - network latency is **${Math.round(results.getSummary().latency)}ms**\n> - went online <t:${Math.round(startTime / 1000)}:R>\n-# <@1373131510936502283> v${VERSION}`,
@@ -320,7 +322,7 @@ async function logMessage(interaction, message) {
 	let name = interaction.user.username;
 	if (!interaction.inGuild()) name = `\x1b[33m[DM]\x1b[37m ${name}`;
 
-	console.log(`\x1b[35m> /${interaction.commandName}\x1b[37m — ${message} | ${name} [${formatDate(new Date())} ${formatTime(new Date())}]\x1b[37m`);
+	console.log(`\x1b[35m> /${interaction.commandName}\x1b[37m — ${message} | ${name} [${formatDate(new Date())} ${formatTime(new Date())}]`);
 }
 
 // UTILITY: LOG INTERACTION ERROR & SEND RESPONSE
@@ -332,12 +334,12 @@ async function errorMessage(interaction, error, deferred) {
 		if (deferred) {
 			await interaction.editReply(":bangbang: Deferred interaction experienced an error.");
 			await interaction.followUp({
-				content: `:fearful: Something went wrong....\n\`\`\`diff\n- ERROR!!\n- ${error}\n\`\`\`\n:bug: **Please report bugs!**\n> 1. check [the “DISCORD BOT” status entry](https://pinniped.page/status#DISCORD-BOT) and [GitHub](https://github.com/ObsidianSeal/Omega-Seal-The-Square/issues) to see if this is a known problem\n> 2. if the issue has yet to be reported, bring it up in [Seal Squad](https://ite.fyi/ss) or through [the contact page](https://pinniped.page/contact)\n > 3. be happy\n-# <@960236750830194688> v${VERSION}`,
+				content: `:fearful: Something went wrong....\n\`\`\`diff\n- ERROR!!\n- ${error}\n\`\`\`\n:bug: **Please report bugs!**\n> 1. check [GitHub](https://github.com/ObsidianSeal/CEPDBC/issues) to see if this is a known problem\n> 2. if the issue has yet to be reported, let <@390612175137406978> know\n > 3. be happy\n-# <@1373131510936502283> v${VERSION}`,
 				flags: [MessageFlags.Ephemeral, MessageFlags.SuppressEmbeds],
 			});
 		} else {
 			await interaction.reply({
-				content: `:fearful: Something went wrong....\n\`\`\`diff\n- ERROR!!\n- ${error}\n\`\`\`\n:bug: **Please report bugs!**\n> 1. check [the “DISCORD BOT” status entry](https://pinniped.page/status#DISCORD-BOT) and [GitHub](https://github.com/ObsidianSeal/Omega-Seal-The-Square/issues) to see if this is a known problem\n> 2. if the issue has yet to be reported, bring it up in [Seal Squad](https://ite.fyi/ss) or through [the contact page](https://pinniped.page/contact)\n > 3. be happy\n-# <@960236750830194688> v${VERSION}`,
+				content: `:fearful: Something went wrong....\n\`\`\`diff\n- ERROR!!\n- ${error}\n\`\`\`\n:bug: **Please report bugs!**\n> 1. check [GitHub](https://github.com/ObsidianSeal/CEPDBC/issues) to see if this is a known problem\n> 2. if the issue has yet to be reported, let <@390612175137406978> know\n > 3. be happy\n-# <@1373131510936502283> v${VERSION}`,
 				flags: [MessageFlags.Ephemeral, MessageFlags.SuppressEmbeds],
 			});
 		}
@@ -348,7 +350,7 @@ async function errorMessage(interaction, error, deferred) {
 
 // UTILITY: OTHER ERROR
 function otherErrorMessage(error) {
-	console.log(`\x1b[31mERROR!!\x1b[37m [${formatDate(new Date())} ${formatTime(new Date())}]\x1b[37m`);
+	console.log(`\x1b[31mERROR!!\x1b[37m [${formatDate(new Date())} ${formatTime(new Date())}]`);
 	console.log(error);
 }
 
