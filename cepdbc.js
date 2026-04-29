@@ -262,7 +262,7 @@ clientD.on("interactionCreate", async (interaction) => {
 	if (commandName === "help") {
 		try {
 			await interaction.reply(
-				":printer: **Command syntaxes and descriptions.**\n> `/ping` Latency and network speed details.\n> `/start` Start the Minecraft server.\n> `/status` Check the Minecraft server’s status, version, and more.\n> `/help` Learn more about CEPDBC’s commands.",
+				`:printer: **Command syntaxes and descriptions.**\n> \`/ping\` Latency and network speed details.\n> \`/start\` Start the Minecraft server.\n> \`/status\` Check the Minecraft server’s status, version, and more.\n> \`/help\` Learn more about CEPDBC’s commands.\n-# <@1373131510936502283> v${VERSION}`,
 			);
 
 			logMessage(interaction, "sent");
