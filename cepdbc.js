@@ -1,7 +1,7 @@
 // *** much of this code is copied from Omega Seal ***
 
 // VERSION
-const VERSION = "0.7";
+const VERSION = "0.7.1";
 
 // IMPORTS
 const { tokenD, tokenE } = require("./config.json");
