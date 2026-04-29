@@ -1,5 +1,8 @@
 // *** much of this code is copied from Omega Seal ***
 
+// VERSION
+const VERSION = "0.7";
+
 // IMPORTS
 const { tokenD, tokenE } = require("./config.json");
 const { Client: DiscordClient, GatewayIntentBits, ActivityType, InteractionType, MessageFlags, EmbedBuilder } = require("discord.js");
@@ -34,7 +37,9 @@ clientD.once("clientReady", async () => {
 	try {
 		console.log("\x1b[32mCEPDBC is now online!\n");
 		clientD.users.fetch("390612175137406978").then((user) => {
-			user.send(`## <:cepdbc:1373164311127523481> CEPDBC is now online! <:cepdbc:1373164311127523481>\n-# v0.7 @ ${Date.now()} = <t:${Math.round(Date.now() / 1000)}:R>`);
+			user.send(
+				`## <:cepdbc:1373164311127523481> CEPDBC is now online! <:cepdbc:1373164311127523481>\n-# v${VERSION} @ ${Date.now()} = <t:${Math.round(Date.now() / 1000)}:R>`,
+			);
 		});
 
 		await server.get();
@@ -167,10 +172,10 @@ clientD.on("interactionCreate", async (interaction) => {
 
 			new SpeedTest().onFinish = async (results) => {
 				try {
-					let webSocketPing = clientD.ws.ping;
+					let webSocketPing = client.ws.ping;
 
 					await interaction.editReply(
-						`:ping_pong: **Pong!**\n> this interaction was received **${botPing}ms** after it was created\n> the Discord API websocket is reporting a latency of **${webSocketPing}ms**\n> on a network with upload/download speeds of **${Math.round(results.getSummary().upload / 1000000)}Mbps** and **${Math.round(results.getSummary().download / 1000000)}Mbps**\n> network latency is **${Math.round(results.getSummary().latency)}ms**`,
+						`:ping_pong: **Pong!**\n> - interaction received **${botPing}ms** after its creation\n> - Discord API websocket is reporting a latency of **${webSocketPing}ms**\n> - on a network with upload/download speeds of **${Math.round(results.getSummary().upload / 1000000)}Mbps** and **${Math.round(results.getSummary().download / 1000000)}Mbps**\n> - network latency is **${Math.round(results.getSummary().latency)}ms**\n> - went online <t:${Math.round(startTime / 1000)}:R>\n-# <@1373131510936502283> v${VERSION}`,
 					);
 
 					logMessage(
@@ -257,7 +262,7 @@ clientD.on("interactionCreate", async (interaction) => {
 	if (commandName === "help") {
 		try {
 			await interaction.reply(
-				":printer: **Command syntaxes and descriptions.**\n> `/ping` Latency information.\n> `/start` Start the Minecraft server.\n> `/status` Check the Minecraft server’s status, version, and more.\n> `/help` Learn more about CEPDBC’s commands.",
+				":printer: **Command syntaxes and descriptions.**\n> `/ping` Latency and network speed details.\n> `/start` Start the Minecraft server.\n> `/status` Check the Minecraft server’s status, version, and more.\n> `/help` Learn more about CEPDBC’s commands.",
 			);
 
 			logMessage(interaction, "sent");
@@ -327,13 +332,13 @@ async function errorMessage(interaction, error, deferred) {
 		if (deferred) {
 			await interaction.editReply(":bangbang: Deferred interaction experienced an error.");
 			await interaction.followUp({
-				content: `:fearful: Something went wrong....\n\`\`\`diff\n- ERROR!!\n- ${error}\n\`\`\`\n:bug: **Please report bugs!**\n> submit a bug report: [pinniped.page/contact](https://pinniped.page/contact)\n> or, for general help, use \`/help\``,
-				flags: MessageFlags.Ephemeral,
+				content: `:fearful: Something went wrong....\n\`\`\`diff\n- ERROR!!\n- ${error}\n\`\`\`\n:bug: **Please report bugs!**\n> 1. check [the “DISCORD BOT” status entry](https://pinniped.page/status#DISCORD-BOT) and [GitHub](https://github.com/ObsidianSeal/Omega-Seal-The-Square/issues) to see if this is a known problem\n> 2. if the issue has yet to be reported, bring it up in [Seal Squad](https://ite.fyi/ss) or through [the contact page](https://pinniped.page/contact)\n > 3. be happy\n-# <@960236750830194688> v${VERSION}`,
+				flags: [MessageFlags.Ephemeral, MessageFlags.SuppressEmbeds],
 			});
 		} else {
 			await interaction.reply({
-				content: `:fearful: Something went wrong....\n\`\`\`diff\n- ERROR!!\n- ${error}\n\`\`\`\n:bug: **Please report bugs!**\n> submit a bug report: [pinniped.page/contact](https://pinniped.page/contact)\n> or, for general help, use \`/help\``,
-				flags: MessageFlags.Ephemeral,
+				content: `:fearful: Something went wrong....\n\`\`\`diff\n- ERROR!!\n- ${error}\n\`\`\`\n:bug: **Please report bugs!**\n> 1. check [the “DISCORD BOT” status entry](https://pinniped.page/status#DISCORD-BOT) and [GitHub](https://github.com/ObsidianSeal/Omega-Seal-The-Square/issues) to see if this is a known problem\n> 2. if the issue has yet to be reported, bring it up in [Seal Squad](https://ite.fyi/ss) or through [the contact page](https://pinniped.page/contact)\n > 3. be happy\n-# <@960236750830194688> v${VERSION}`,
+				flags: [MessageFlags.Ephemeral, MessageFlags.SuppressEmbeds],
 			});
 		}
 	} catch (error2) {
