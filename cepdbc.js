@@ -9,6 +9,15 @@ const { Client: DiscordClient, GatewayIntentBits, ActivityType, InteractionType,
 const { Client: ExarotonClient } = require("exaroton");
 const SpeedTest = require("@cloudflare/speedtest").default;
 
+// (HOPEFULLY TEMPORARY) FIX FOR CLOUDFLARE SPEEDTEST, provided by Gemini
+if (typeof window === "undefined") {
+	global.window = {
+		location: {
+			origin: "https://speed.cloudflare.com",
+		},
+	};
+}
+
 // MAKE THE EXAROTON CLIENT
 const clientE = new ExarotonClient(tokenE);
 
@@ -39,9 +48,7 @@ clientD.once("clientReady", async () => {
 		startTime = Date.now();
 		console.log("\x1b[32mCEPDBC is now online!\x1b[37m\n");
 		clientD.users.fetch("390612175137406978").then((user) => {
-			user.send(
-				`## <:cepdbc:1373164311127523481> CEPDBC is now online! <:cepdbc:1373164311127523481>\n-# v${VERSION} @ ${Date.now()} = <t:${Math.round(Date.now() / 1000)}:R>`,
-			);
+			user.send(`## <:cepdbc:1373164311127523481> CEPDBC is now online! <:cepdbc:1373164311127523481>\n-# v${VERSION} @ ${Date.now()} = <t:${Math.round(Date.now() / 1000)}:R>`);
 		});
 
 		await server.get();
@@ -87,11 +94,7 @@ server.on("status", async (server) => {
 
 			if (server.status == server.STATUS.OFFLINE) {
 				let account = await clientE.getAccount();
-				await server.setMOTD(
-					`§3§lCivil Engineers’ Paradise§7 | §a§l${server.software.version}§7 | §d§l${
-						Math.round(account.credits * 100) / 100
-					} ☰\n§6> > >§e does the Discord bot work?`,
-				);
+				await server.setMOTD(`§3§lCivil Engineers’ Paradise§7 | §a§l${server.software.version}§7 | §d§l${Math.round(account.credits * 100) / 100} ☰\n§6> > >§e does the Discord bot work?`);
 
 				/*
 				 * Minecraft format codes
@@ -142,13 +145,7 @@ server.on("console:line", async (line) => {
 		for (let player of server.players.list) {
 			let testString = `<${player}>`;
 			if (line.includes(testString)) {
-				clientD.channels.cache
-					.get("1373444936799617054")
-					.send(
-						`${line
-							.substring(line.indexOf(testString))
-							.replace(testString, `**${testString.substring(1, testString.length - 1)}** <t:${Math.round(Date.now() / 1000)}:R>`)}`,
-					);
+				clientD.channels.cache.get("1373444936799617054").send(`${line.substring(line.indexOf(testString)).replace(testString, `**${testString.substring(1, testString.length - 1)}** <t:${Math.round(Date.now() / 1000)}:R>`)}`);
 
 				console.log(`\x1b[36mmessage received from server:\x1b[37m ${line} [${formatDate(new Date())} ${formatTime(new Date())}]`);
 			}
@@ -180,10 +177,7 @@ clientD.on("interactionCreate", async (interaction) => {
 						`:ping_pong: **Pong!**\n> - interaction received **${botPing}ms** after its creation\n> - Discord API websocket is reporting a latency of **${webSocketPing}ms**\n> - on a network with upload/download speeds of **${Math.round(results.getSummary().upload / 1000000)}Mbps** and **${Math.round(results.getSummary().download / 1000000)}Mbps**\n> - network latency is **${Math.round(results.getSummary().latency)}ms**\n> - went online <t:${Math.round(startTime / 1000)}:R>\n-# <@1373131510936502283> v${VERSION}`,
 					);
 
-					logMessage(
-						interaction,
-						`${botPing}, ${webSocketPing}, ${Math.round(results.getSummary().upload / 1000000)}, ${Math.round(results.getSummary().upload / 1000000)}, ${Math.round(results.getSummary().latency)}`,
-					);
+					logMessage(interaction, `${botPing}, ${webSocketPing}, ${Math.round(results.getSummary().upload / 1000000)}, ${Math.round(results.getSummary().upload / 1000000)}, ${Math.round(results.getSummary().latency)}`);
 				} catch (error) {
 					errorMessage(interaction, error, true);
 				}
@@ -238,9 +232,7 @@ clientD.on("interactionCreate", async (interaction) => {
 			const serverDetailsEmbed = new EmbedBuilder()
 				.setTitle("CIVIL ENGINEERS’ PARADISE  //  MINECRAFT SERVER STATUS")
 				.setDescription(
-					`<:cep:1373149617557995600> <t:${Math.round(
-						Date.now() / 1000,
-					)}:R>\n\n:bulb: **STATUS:**\n${statusString}${playersString}\n-# note: the server will automatically start if you join\n\n:jigsaw: **VERSION:**\n${
+					`<:cep:1373149617557995600> <t:${Math.round(Date.now() / 1000)}:R>\n\n:bulb: **STATUS:**\n${statusString}${playersString}\n-# note: the server will automatically start if you join\n\n:jigsaw: **VERSION:**\n${
 						server.software.version
 					}\n-# the latest version of Minecraft: Java Edition\n\n:incoming_envelope: **IP:**\nserver.pinniped.page\n-# if that doesn’t work, try ${server.address}:${
 						server.port
@@ -281,11 +273,7 @@ clientD.on("messageCreate", async (message) => {
 			let name = message.member.nickname;
 			if (name === null) name = message.author.displayName;
 
-			server.executeCommand(
-				`tellraw @a ["",{"text":"[","color":"gray"},{"text":"@${name}","color":"gold"},{"text":"]","color":"gray"},{"text":" ${message.content
-					.replaceAll("\\", "\\\\")
-					.replaceAll('"', '\\"')}"}]`,
-			);
+			server.executeCommand(`tellraw @a ["",{"text":"[","color":"gray"},{"text":"@${name}","color":"gold"},{"text":"]","color":"gray"},{"text":" ${message.content.replaceAll("\\", "\\\\").replaceAll('"', '\\"')}"}]`);
 
 			console.log(`\x1b[36mmessage sent to server:\x1b[37m [@${name}] ${message.content} [${formatDate(new Date())} ${formatTime(new Date())}]`);
 		}
