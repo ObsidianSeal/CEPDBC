@@ -4,6 +4,6 @@
 
 the Civil Engineers’ Paradise Discord Bot Companion
 
-[Discord.js](https://discord.js.org/) bot + [exaroton API](https://developers.exaroton.com/)
+[Discord.js](https://discord.js.org/) + [exaroton API](https://developers.exaroton.com/) + more
 
 no `node_modules` or `config.json`
