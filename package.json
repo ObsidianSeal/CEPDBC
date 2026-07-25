@@ -5,7 +5,7 @@
 	"description": "the Civil Engineers’ Paradise Discord Bot Companion",
 	"main": "cepdbc.js",
 	"dependencies": {
-		"@cloudflare/speedtest": "^1.11.0",
+		"@cloudflare/speedtest": "^1.12.1",
 		"discord.js": "^14.27.0",
 		"exaroton": "^2.0.2"
 	}
